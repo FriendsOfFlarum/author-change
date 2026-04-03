@@ -13,14 +13,7 @@ use Flarum\User\User;
  */
 class PostUserChanged
 {
-    public $post;
-    public $oldUser;
-    public $actor;
-
-    public function __construct(Post $post, User $oldUser = null, User $actor = null)
+    public function __construct(public Post $post, public ?User $oldUser = null, public ?User $actor = null)
     {
-        $this->post = $post;
-        $this->oldUser = $oldUser;
-        $this->actor = $actor;
     }
 }

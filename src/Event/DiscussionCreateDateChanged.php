@@ -14,14 +14,7 @@ use Flarum\User\User;
  */
 class DiscussionCreateDateChanged
 {
-    public $discussion;
-    public $oldDate;
-    public $actor;
-
-    public function __construct(Discussion $discussion, Carbon $oldDate, User $actor = null)
+    public function __construct(public Discussion $discussion, public Carbon $oldDate, public ?User $actor = null)
     {
-        $this->discussion = $discussion;
-        $this->oldDate = $oldDate;
-        $this->actor = $actor;
     }
 }

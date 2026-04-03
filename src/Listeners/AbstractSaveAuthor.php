@@ -12,11 +12,8 @@ use Flarum\User\User;
 
 abstract class AbstractSaveAuthor
 {
-    protected $timeValidator;
-
-    public function __construct(TimeValidator $timeValidator)
+    public function __construct(protected TimeValidator $timeValidator)
     {
-        $this->timeValidator = $timeValidator;
     }
 
     /**

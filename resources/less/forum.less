@@ -5,36 +5,62 @@
     }
 
     .Search {
-        input {
-            display: block;
-            width: 100%;
+        width: 100%;
+
+        .Search-input {
+            display: flex;
+            align-items: center;
+
+            input {
+                flex: 1;
+                min-width: 0;
+            }
         }
 
-        &.focused {
-            margin-left: inherit;
-
-            input, .Search-results {
-                width: 100%;
-            }
+        .Search-results {
+            width: 100%;
         }
     }
 
     .SelectedUser {
-        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-height: 36px;
 
         .Avatar {
             .Avatar--size(24px);
-            margin: -2px 10px -2px 0;
+            flex-shrink: 0;
+        }
+
+        .username {
+            flex: 1;
         }
     }
 
     .RemoveUserButton {
-        float: right;
+        margin-left: auto;
         padding: 0;
     }
 
-    .CancelButton {
-        margin-left: 5px;
+    // UserSearchResult renders <button> when onclick is provided (2.x), but core only styles <a>
+    .UserSearchResult > button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 15px;
+        border-radius: 0;
+        width: 100%;
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        text-align: start;
+
+        &:hover, &:focus {
+            background-color: var(--control-bg);
+        }
     }
 
     // Flarum doesn't appear to have a disabled style

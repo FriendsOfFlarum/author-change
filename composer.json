@@ -9,7 +9,7 @@
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
-        "flarum/core": "^1.2"
+        "flarum/core": "^2.0.0"
     },
     "replace": {
         "clarkwinkelmann/flarum-ext-post-date": "*"
@@ -33,6 +33,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-2.x": "2.x-dev"
+        },
         "flarum-extension": {
             "title": "Author Change",
             "category": "feature",
@@ -45,5 +48,7 @@
         "flagrow": {
             "discuss": "https://discuss.flarum.org/d/21731"
         }
-    }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }

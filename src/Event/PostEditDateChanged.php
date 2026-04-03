@@ -14,14 +14,7 @@ use Flarum\User\User;
  */
 class PostEditDateChanged
 {
-    public $post;
-    public $oldDate;
-    public $actor;
-
-    public function __construct(Post $post, Carbon $oldDate = null, User $actor = null)
+    public function __construct(public Post $post, public ?Carbon $oldDate = null, public ?User $actor = null)
     {
-        $this->post = $post;
-        $this->oldDate = $oldDate;
-        $this->actor = $actor;
     }
 }
