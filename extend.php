@@ -22,14 +22,14 @@ use Flarum\Post\Event\Saving as PostSaving;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less')
-        ->jsDirectory(__DIR__ . '/js/dist/forum'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less')
+        ->jsDirectory(__DIR__.'/js/dist/forum'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js'),
+        ->js(__DIR__.'/js/dist/admin.js'),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     // Show and Create already include 'user' by default in core; Update does not.
     (new Extend\ApiResource(Resource\DiscussionResource::class))
@@ -71,31 +71,31 @@ return [
                 ->group('fof-author-change')
                 ->listen(Event\DiscussionCreateDateChanged::class, 'discussion.create_date_changed', fn ($e) => [
                     'discussion_id' => $e->discussion->id,
-                    'old_date' => $e->oldDate->toIso8601String(),
-                    'new_date' => $e->discussion->created_at->toIso8601String(),
+                    'old_date'      => $e->oldDate->toIso8601String(),
+                    'new_date'      => $e->discussion->created_at->toIso8601String(),
                 ])
                 ->listen(Event\DiscussionUserChanged::class, 'discussion.user_changed', fn ($e) => [
                     'discussion_id' => $e->discussion->id,
-                    'old_user_id' => optional($e->oldUser)->id,
-                    'new_user_id' => optional($e->discussion->user)->id,
+                    'old_user_id'   => optional($e->oldUser)->id,
+                    'new_user_id'   => optional($e->discussion->user)->id,
                 ])
                 ->listen(Event\PostCreateDateChanged::class, 'post.create_date_changed', fn ($e) => [
-                    'post_id' => $e->post->id,
+                    'post_id'       => $e->post->id,
                     'discussion_id' => $e->post->discussion->id,
-                    'old_date' => $e->oldDate->toIso8601String(),
-                    'new_date' => $e->post->created_at->toIso8601String(),
+                    'old_date'      => $e->oldDate->toIso8601String(),
+                    'new_date'      => $e->post->created_at->toIso8601String(),
                 ])
                 ->listen(Event\PostEditDateChanged::class, 'post.edit_date_changed', fn ($e) => [
-                    'post_id' => $e->post->id,
+                    'post_id'       => $e->post->id,
                     'discussion_id' => $e->post->discussion->id,
-                    'old_date' => optional($e->oldDate)->toIso8601String(),
-                    'new_date' => optional($e->post->edited_at)->toIso8601String(),
+                    'old_date'      => optional($e->oldDate)->toIso8601String(),
+                    'new_date'      => optional($e->post->edited_at)->toIso8601String(),
                 ])
                 ->listen(Event\PostUserChanged::class, 'post.user_changed', fn ($e) => [
-                    'post_id' => $e->post->id,
+                    'post_id'       => $e->post->id,
                     'discussion_id' => $e->post->discussion->id,
-                    'old_user_id' => optional($e->oldUser)->id,
-                    'new_user_id' => optional($e->post->user)->id,
+                    'old_user_id'   => optional($e->oldUser)->id,
+                    'new_user_id'   => optional($e->post->user)->id,
                 ]),
         ]),
 ];

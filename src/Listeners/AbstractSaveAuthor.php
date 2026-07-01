@@ -12,12 +12,12 @@
 namespace FoF\AuthorChange\Listeners;
 
 use Carbon\Carbon;
-use FoF\AuthorChange\Event;
-use FoF\AuthorChange\Validators\TimeValidator;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
 use Flarum\User\User;
+use FoF\AuthorChange\Event;
+use FoF\AuthorChange\Validators\TimeValidator;
 
 abstract class AbstractSaveAuthor
 {
@@ -52,7 +52,7 @@ abstract class AbstractSaveAuthor
                 $newUser = User::query()->findOrFail($userId);
 
                 $model->user()->associate($newUser);
-            } else if (empty($data['relationships']['user']['data'])) {
+            } elseif (empty($data['relationships']['user']['data'])) {
                 $model->user()->dissociate();
             }
 

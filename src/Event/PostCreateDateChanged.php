@@ -17,9 +17,10 @@ use Flarum\User\User;
 
 /**
  * The creation date of a post was modified.
- * @property Post $post
+ *
+ * @property Post        $post
  * @property Carbon|null $oldDate Previous creation date
- * @property User|null $actor Actor who performed the change
+ * @property User|null   $actor   Actor who performed the change
  */
 class PostCreateDateChanged
 {
