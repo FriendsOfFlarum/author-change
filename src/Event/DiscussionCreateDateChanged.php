@@ -1,6 +1,15 @@
 <?php
 
-namespace ClarkWinkelmann\AuthorChange\Event;
+/*
+ * This file is part of fof/author-change.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FoF\AuthorChange\Event;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
@@ -14,8 +23,11 @@ use Flarum\User\User;
  */
 class DiscussionCreateDateChanged
 {
+    /** @var Discussion */
     public $discussion;
+    /** @var Carbon|null */
     public $oldDate;
+    /** @var User|null */
     public $actor;
 
     public function __construct(Discussion $discussion, Carbon $oldDate, User $actor = null)
