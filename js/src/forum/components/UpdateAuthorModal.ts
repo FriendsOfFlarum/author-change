@@ -78,15 +78,15 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
   }
 
   title() {
-    return app.translator.trans('clarkwinkelmann-author-change.forum.modal.title-' + (this.isPost() ? 'post' : 'discussion'));
+    return app.translator.trans('fof-author-change.forum.modal.title-' + (this.isPost() ? 'post' : 'discussion'));
   }
 
   content() {
     return m('.Modal-body', [
       m('.Form', [
-        app.forum.attribute('clarkwinkelmannAuthorChangeCanEditUser')
+        app.forum.attribute('fofAuthorChangeCanEditUser')
           ? m('.Form-group', [
-              m('label', app.translator.trans('clarkwinkelmann-author-change.forum.modal.user')),
+              m('label', app.translator.trans('fof-author-change.forum.modal.user')),
               m('.SelectedUser', [
                 Avatar.component({ user: this.user }),
                 username(this.user),
@@ -115,10 +115,10 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
               }),
             ])
           : null,
-        app.forum.attribute('clarkwinkelmannAuthorChangeCanEditDate')
+        app.forum.attribute('fofAuthorChangeCanEditDate')
           ? [
               m('.Form-group', [
-                m('label', app.translator.trans('clarkwinkelmann-author-change.forum.modal.created_at')),
+                m('label', app.translator.trans('fof-author-change.forum.modal.created_at')),
                 m('input.FormControl', {
                   type: 'datetime-local',
                   required: true,
@@ -135,7 +135,7 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
               ]),
               this.isPost()
                 ? m('.Form-group', [
-                    m('label', app.translator.trans('clarkwinkelmann-author-change.forum.modal.edited_at')),
+                    m('label', app.translator.trans('fof-author-change.forum.modal.edited_at')),
                     m('input.FormControl', {
                       type: 'datetime-local',
                       value: this.editedAt,
@@ -175,11 +175,9 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
                   // Disable checkbox if other model isn't available since we won't have the ID to save it
                   disabled: this.loading || !this.otherModelForFirstPostSync,
                 },
-                app.translator.trans('clarkwinkelmann-author-change.forum.modal.sync-with-' + (this.isPost() ? 'discussion' : 'post'))
+                app.translator.trans('fof-author-change.forum.modal.sync-with-' + (this.isPost() ? 'discussion' : 'post'))
               ),
-              this.otherModelForFirstPostSync
-                ? null
-                : m('.helpText', app.translator.trans('clarkwinkelmann-author-change.forum.modal.sync-impossible')),
+              this.otherModelForFirstPostSync ? null : m('.helpText', app.translator.trans('fof-author-change.forum.modal.sync-impossible')),
             ])
           : null,
         m('.Form-controls', [
@@ -190,7 +188,7 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
               type: 'submit',
               className: 'Button Button--primary',
             },
-            app.translator.trans('clarkwinkelmann-author-change.forum.modal.submit')
+            app.translator.trans('fof-author-change.forum.modal.submit')
           ),
           Button.component(
             {
@@ -199,7 +197,7 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
                 app.modal.close();
               },
             },
-            app.translator.trans('clarkwinkelmann-author-change.forum.modal.cancel')
+            app.translator.trans('fof-author-change.forum.modal.cancel')
           ),
         ]),
       ]),

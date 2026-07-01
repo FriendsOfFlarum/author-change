@@ -1,35 +1,48 @@
 {
-    "name": "clarkwinkelmann/flarum-ext-author-change",
+    "name": "fof/author-change",
     "description": "Let mods update the author and date of discussions and posts",
     "keywords": [
         "flarum",
+        "change",
+        "modify",
         "author",
         "date"
     ],
     "type": "flarum-extension",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/FriendsOfFlarum/author-change/issues",
+        "source": "https://github.com/FriendsOfFlarum/author-change",
+        "forum": "https://discuss.flarum.org/d/21731"
+    },
+    "homepage": "https://friendsofflarum.org",
+    "funding": [
+        {
+            "type": "website",
+            "url": "https://opencollective.com/fof/donate"
+        }
+    ],
     "require": {
         "flarum/core": "^2.0.0"
     },
     "replace": {
+        "clarkwinkelmann/flarum-ext-author-change": "*",
         "clarkwinkelmann/flarum-ext-post-date": "*"
     },
     "authors": [
         {
-            "name": "Clark Winkelmann",
-            "email": "clark.winkelmann@gmail.com",
-            "homepage": "https://clarkwinkelmann.com/",
-            "role": "Developer"
+            "name": "FriendsOfFlarum",
+            "homepage": "https://friendsofflarum.org"
         }
     ],
-    "support": {
-        "issues": "https://github.com/clarkwinkelmann/flarum-ext-author-change/issues",
-        "source": "https://github.com/clarkwinkelmann/flarum-ext-author-change",
-        "forum": "https://discuss.flarum.org/d/21731"
-    },
     "autoload": {
         "psr-4": {
-            "ClarkWinkelmann\\AuthorChange\\": "src/"
+            "FoF\\AuthorChange\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FoF\\AuthorChange\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -37,17 +50,46 @@
             "dev-2.x": "2.x-dev"
         },
         "flarum-extension": {
-            "title": "Author Change",
+            "title": "FoF Author Change",
             "category": "feature",
             "icon": {
                 "name": "fas fa-user-edit",
-                "backgroundColor": "#684ba6",
+                "backgroundColor": "#e74c3c",
                 "color": "#fff"
-            }
+            },
+            "optional-dependencies": [
+                "flarum/audit"
+            ]
         },
-        "flagrow": {
-            "discuss": "https://discuss.flarum.org/d/21731"
+        "flarum-cli": {
+            "modules": {
+                "backendTesting": true,
+                "githubActions": true
+            }
         }
+    },
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit -c tests/phpunit.unit.xml",
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php",
+        "analyse:phpstan": "phpstan analyse",
+        "clear-cache:phpstan": "phpstan clear-result-cache"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:unit": "Runs all unit tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+        "analyse:phpstan": "Run static analysis"
+    },
+    "require-dev": {
+        "flarum/testing": "^2.0",
+        "flarum/phpstan": "^2.0",
+        "flarum/audit": "*"
     },
     "minimum-stability": "beta",
     "prefer-stable": true

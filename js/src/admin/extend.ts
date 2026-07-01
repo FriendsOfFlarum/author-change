@@ -6,16 +6,16 @@ export default [
     .permission(
       () => ({
         icon: 'fas fa-user-edit',
-        label: app.translator.trans('clarkwinkelmann-author-change.admin.permissions.edit-user'),
-        permission: 'clarkwinkelmann-author-change.edit-user',
+        label: app.translator.trans('fof-author-change.admin.permissions.edit-user'),
+        permission: 'fof-author-change.edit-user',
       }),
       'moderate'
     )
     .permission(
       () => ({
         icon: 'far fa-clock',
-        label: app.translator.trans('clarkwinkelmann-author-change.admin.permissions.edit-date'),
-        permission: 'clarkwinkelmann-author-change.edit-date',
+        label: app.translator.trans('fof-author-change.admin.permissions.edit-date'),
+        permission: 'fof-author-change.edit-date',
       }),
       'moderate'
     ),

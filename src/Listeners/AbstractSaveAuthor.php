@@ -1,14 +1,23 @@
 <?php
 
-namespace ClarkWinkelmann\AuthorChange\Listeners;
+/*
+ * This file is part of fof/author-change.
+ *
+ * Copyright (c) FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FoF\AuthorChange\Listeners;
 
 use Carbon\Carbon;
-use ClarkWinkelmann\AuthorChange\Event;
-use ClarkWinkelmann\AuthorChange\Validators\TimeValidator;
 use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
 use Flarum\User\User;
+use FoF\AuthorChange\Event;
+use FoF\AuthorChange\Validators\TimeValidator;
 
 abstract class AbstractSaveAuthor
 {
@@ -17,16 +26,17 @@ abstract class AbstractSaveAuthor
     }
 
     /**
-     * @param AbstractModel|Discussion|Post $model
-     * @param User $actor
-     * @param array $data
+     * @param Discussion|Post $model
+     * @param User            $actor
+     * @param array           $data
+     *
      * @throws \Flarum\User\Exception\PermissionDeniedException
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function saveAuthor(AbstractModel $model, User $actor, array $data)
+    protected function saveAuthor(AbstractModel $model, User $actor, array $data): void
     {
         if (isset($data['relationships']['user']['data'])) {
-            $actor->assertCan('clarkwinkelmann-author-change.edit-user');
+            $actor->assertCan('fof-author-change.edit-user');
 
             if ($model instanceof Post) {
                 $model->raise(new Event\PostUserChanged($model, $model->user));
@@ -42,7 +52,7 @@ abstract class AbstractSaveAuthor
                 $newUser = User::query()->findOrFail($userId);
 
                 $model->user()->associate($newUser);
-            } else if (empty($data['relationships']['user']['data'])) {
+            } elseif (empty($data['relationships']['user']['data'])) {
                 $model->user()->dissociate();
             }
 
@@ -81,7 +91,7 @@ abstract class AbstractSaveAuthor
         }
 
         if (isset($data['attributes']['createdAt'])) {
-            $actor->assertCan('clarkwinkelmann-author-change.edit-date');
+            $actor->assertCan('fof-author-change.edit-date');
 
             $this->timeValidator->assertValid([
                 'time' => $data['attributes']['createdAt'],
@@ -102,7 +112,7 @@ abstract class AbstractSaveAuthor
         }
 
         if (isset($data['attributes']['editedAt']) && $model instanceof Post) {
-            $actor->assertCan('clarkwinkelmann-author-change.edit-date');
+            $actor->assertCan('fof-author-change.edit-date');
 
             $model->raise(new Event\PostEditDateChanged($model, $model->edited_at));
 

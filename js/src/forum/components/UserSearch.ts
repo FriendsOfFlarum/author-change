@@ -40,7 +40,7 @@ export default class UserSearch extends Search<UserSearchAttrs> {
   private setPlaceholder() {
     const input = this.element.querySelector<HTMLInputElement>('input');
     if (input) {
-      input.placeholder = extractText(app.translator.trans('clarkwinkelmann-author-change.forum.search.placeholder'));
+      input.placeholder = extractText(app.translator.trans('fof-author-change.forum.search.placeholder'));
       input.setAttribute('aria-label', input.placeholder);
     }
   }
