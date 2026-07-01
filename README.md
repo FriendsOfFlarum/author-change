@@ -1,6 +1,6 @@
 # Author Change by FriendsOfFlarum
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/fof/author-change.svg)](https://packagist.org/packages/fof/author-change) [![Compatibility](https://flarum-badge-api.davwheat.dev/v1/compat-latest/fof/author-change)](https://flarum-badge-api.davwheat.dev/v1/compat-latest/fof/author-change) [![OpenCollective](https://img.shields.io/badge/opencollective-fof-blue.svg)](https://opencollective.com/fof/donate)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/fof/author-change.svg)](https://packagist.org/packages/fof/author-change) [![OpenCollective](https://img.shields.io/badge/opencollective-fof-blue.svg)](https://opencollective.com/fof/donate)
 
 A [Flarum](http://flarum.org) extension. Let mods update the author and date of discussions and posts.
 
