@@ -5,14 +5,15 @@ import PostControls from 'flarum/forum/utils/PostControls';
 import Button from 'flarum/common/components/Button';
 import Discussion from 'flarum/common/models/Discussion';
 import Post from 'flarum/common/models/Post';
-app.initializers.add('clarkwinkelmann-author-change', () => {
+
+app.initializers.add('fof-author-change', () => {
   extend(DiscussionControls, 'moderationControls', function (items, discussion: Discussion) {
-    if (!app.forum.attribute('clarkwinkelmannAuthorChangeCanEditUser') && !app.forum.attribute('clarkwinkelmannAuthorChangeCanEditDate')) {
+    if (!app.forum.attribute('fofAuthorChangeCanEditUser') && !app.forum.attribute('fofAuthorChangeCanEditDate')) {
       return;
     }
 
     items.add(
-      'clarkwinkelmann-author-change',
+      'fof-author-change',
       Button.component(
         {
           icon: 'fas fa-user-edit',
@@ -22,18 +23,18 @@ app.initializers.add('clarkwinkelmann-author-change', () => {
             });
           },
         },
-        app.translator.trans('clarkwinkelmann-author-change.forum.controls.edit')
+        app.translator.trans('fof-author-change.forum.controls.edit')
       )
     );
   });
 
   extend(PostControls, 'moderationControls', function (items, post: Post) {
-    if (!app.forum.attribute('clarkwinkelmannAuthorChangeCanEditUser') && !app.forum.attribute('clarkwinkelmannAuthorChangeCanEditDate')) {
+    if (!app.forum.attribute('fofAuthorChangeCanEditUser') && !app.forum.attribute('fofAuthorChangeCanEditDate')) {
       return;
     }
 
     items.add(
-      'clarkwinkelmann-author-change',
+      'fof-author-change',
       Button.component(
         {
           icon: 'fas fa-user-edit',
@@ -43,7 +44,7 @@ app.initializers.add('clarkwinkelmann-author-change', () => {
             });
           },
         },
-        app.translator.trans('clarkwinkelmann-author-change.forum.controls.edit')
+        app.translator.trans('fof-author-change.forum.controls.edit')
       )
     );
   });

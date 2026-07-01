@@ -39,14 +39,10 @@ export default class UsersSearchSourceWithoutInternalRouting implements SearchSo
 
     if (results.length === 0) {
       if (query.length < 3) {
-        return [
-          m('li', Button.component({ icon: 'fas fa-info-circle' }, app.translator.trans('clarkwinkelmann-author-change.forum.search.type-more'))),
-        ];
+        return [m('li', Button.component({ icon: 'fas fa-info-circle' }, app.translator.trans('fof-author-change.forum.search.type-more')))];
       }
 
-      return [
-        m('li', Button.component({ icon: 'fas fa-search-minus' }, app.translator.trans('clarkwinkelmann-author-change.forum.search.no-results'))),
-      ];
+      return [m('li', Button.component({ icon: 'fas fa-search-minus' }, app.translator.trans('fof-author-change.forum.search.no-results')))];
     }
 
     const items = results.map((user) =>
@@ -58,9 +54,7 @@ export default class UsersSearchSourceWithoutInternalRouting implements SearchSo
     );
 
     if (query.length < 3) {
-      items.push(
-        m('li', Button.component({ icon: 'fas fa-info-circle' }, app.translator.trans('clarkwinkelmann-author-change.forum.search.type-more')))
-      );
+      items.push(m('li', Button.component({ icon: 'fas fa-info-circle' }, app.translator.trans('fof-author-change.forum.search.type-more'))));
     }
 
     return items;

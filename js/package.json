@@ -1,5 +1,5 @@
 {
-  "name": "@clarkwinkelmann/author-change",
+  "name": "@fof/author-change",
   "private": true,
   "devDependencies": {
     "@flarum/prettier-config": "^1.0.0",
