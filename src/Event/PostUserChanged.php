@@ -16,9 +16,10 @@ use Flarum\User\User;
 
 /**
  * The author of a post was modified.
- * @property Post $post
+ *
+ * @property Post      $post
  * @property User|null $oldUser Previous post author if any
- * @property User|null $actor Actor who performed the change
+ * @property User|null $actor   Actor who performed the change
  */
 class PostUserChanged
 {
@@ -29,7 +30,7 @@ class PostUserChanged
     /** @var User|null */
     public $actor;
 
-    public function __construct(Post $post, User $oldUser = null, User $actor = null)
+    public function __construct(Post $post, ?User $oldUser = null, ?User $actor = null)
     {
         $this->post = $post;
         $this->oldUser = $oldUser;
