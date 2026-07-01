@@ -42,6 +42,6 @@ composer update fof/author-change:"*"
 
 - [Packagist](https://packagist.org/packages/fof/author-change)
 - [GitHub](https://github.com/FriendsOfFlarum/author-change)
-- [Discuss](https://discuss.flarum.org/d/21731)
+- [Discuss](https://discuss.flarum.org/d/39503)
 
 This extension was originally created by [Clark Winkelmann](https://clarkwinkelmann.com/) and is now maintained by [FriendsOfFlarum](https://github.com/FriendsOfFlarum).
