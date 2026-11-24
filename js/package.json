@@ -9,7 +9,8 @@
     "typescript": "^5.9.3",
     "typescript-coverage-report": "^0.6.1",
     "webpack": "^5.104.1",
-    "webpack-cli": "^7.2.3"
+    "webpack-cli": "^7.2.3",
+    "@flarum/jest-config": "^2.1.1"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
@@ -21,6 +22,8 @@
     "build-typings": "npm run clean-typings && ([ -e src/@types ] && cp -r src/@types dist-typings/@types || true) && tsc && npm run post-build-typings",
     "post-build-typings": "find dist-typings -type f -name '*.d.ts' -print0 | xargs -0 sed -i '' 's,../src/@types,@types,g'",
     "check-typings": "tsc --noEmit --emitDeclarationOnly false",
-    "check-typings-coverage": "typescript-coverage-report"
-  }
+    "check-typings-coverage": "typescript-coverage-report",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+  },
+  "type": "module"
 }
