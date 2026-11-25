@@ -56,7 +56,7 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
 
       if (
         this.otherModelForFirstPostSync &&
-        this.otherModelForFirstPostSync.user() === this.user &&
+        (this.otherModelForFirstPostSync.user() || null) === this.user &&
         this.otherModelForFirstPostSync.createdAt()?.toISOString().slice(0, 16) === this.createdAt &&
         this.createdAt // To make test fail if both createdAt are undefined
       ) {
@@ -98,7 +98,8 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
                     onclick={() => {
                       this.user = null;
                       this.attributes.relationships = {
-                        user: [], // https://github.com/flarum/core/issues/2876
+                        // Model.save() drops a null relationship; false is sent as `data: null`.
+                        user: false,
                       };
                       this.dirty = true;
                     }}
@@ -166,7 +167,7 @@ export default class UpdateAuthorModal extends FormModal<UpdateAuthorModalAttrs>
                   // are on discussion+post
                   if (value) {
                     this.attributes.relationships = {
-                      user: this.user || [],
+                      user: this.user || false,
                     };
 
                     this.attributes.createdAt = this.createdAt;

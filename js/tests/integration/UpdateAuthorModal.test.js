@@ -93,14 +93,20 @@ test('the author field is hidden without the author permission', () => {
   expect(root.querySelectorAll('input[type=datetime-local]')).toHaveLength(2);
 });
 
-test('removing the author sends an empty user relationship', () => {
+test('removing the author sends a null user relationship', async () => {
   const modal = open(post('2'));
-  render(modal).querySelector('.RemoveUserButton').click();
+  delete post('2').save;
+  app.modal = { close: jest.fn() };
+  app.request = jest.fn(() => Promise.resolve({ data: { type: 'posts', id: '2', attributes: {} } }));
 
-  expect(modal.user).toBeNull();
-  expect(modal.dirty).toBe(true);
-  expect(modal.attributes.relationships).toStrictEqual({ user: [] });
+  render(modal).querySelector('.RemoveUserButton').click();
   expect(render(modal).querySelector('.RemoveUserButton')).toBeNull();
+
+  modal.onsubmit({ preventDefault() {} });
+  await new Promise((resolve) => setTimeout(resolve));
+
+  expect(app.request).toHaveBeenCalledTimes(1);
+  expect(app.request.mock.calls[0][0].body.data.relationships).toStrictEqual({ user: { data: null } });
 });
 
 test('changing the dates sends them', () => {
@@ -129,4 +135,25 @@ test('submitting a synced discussion saves it and its first post', async () => {
   expect(discussion().save).toHaveBeenCalledWith({ relationships: { user: modal.user } });
   expect(post('1').save).toHaveBeenCalledWith({ relationships: { user: modal.user } });
   expect(app.modal.close).toHaveBeenCalled();
+});
+
+test('an authorless discussion still syncs with its authorless first post by default', () => {
+  app.store.pushPayload({
+    data: {
+      type: 'discussions',
+      id: '2',
+      attributes: { title: 'Orphan', createdAt: '2020-01-01T10:00:00+00:00' },
+      relationships: { user: { data: null }, firstPost: { data: { type: 'posts', id: '3' } } },
+    },
+    included: [
+      {
+        type: 'posts',
+        id: '3',
+        attributes: { number: 1, contentType: 'comment', createdAt: '2020-01-01T10:00:00+00:00' },
+        relationships: { user: { data: null }, discussion: { data: { type: 'discussions', id: '2' } } },
+      },
+    ],
+  });
+
+  expect(open(app.store.getById('discussions', '2')).syncFirstPost).toBe(true);
 });
