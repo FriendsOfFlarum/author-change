@@ -35,17 +35,22 @@ abstract class AbstractSaveAuthor
      */
     protected function saveAuthor(AbstractModel $model, User $actor, array $data): void
     {
-        if (isset($data['relationships']['user']['data'])) {
+        $userData = $data['relationships']['user'] ?? [];
+
+        // A null `data` clears an existing author; on creation the API assigns the creator.
+        if (isset($userData['data']) || ($model->exists && array_key_exists('data', $userData))) {
             $actor->assertCan('fof-author-change.edit-user');
 
-            if ($model instanceof Post) {
-                $model->raise(new Event\PostUserChanged($model, $model->user));
-            } else {
-                $model->raise(new Event\DiscussionUserChanged($model, $model->user));
-            }
-
-            $oldUser = $model->user;
+            // The API has already set the new values on the model by now.
+            $oldUserId = $model->getOriginal('user_id');
+            $oldUser = $oldUserId ? User::query()->find($oldUserId) : null;
             $newUser = null;
+
+            if ($model instanceof Post) {
+                $model->raise(new Event\PostUserChanged($model, $oldUser));
+            } else {
+                $model->raise(new Event\DiscussionUserChanged($model, $oldUser));
+            }
 
             if (isset($data['relationships']['user']['data']['id'])) {
                 $userId = $data['relationships']['user']['data']['id'];
@@ -98,23 +103,25 @@ abstract class AbstractSaveAuthor
             ]);
 
             if ($model instanceof Post) {
-                $model->raise(new Event\PostCreateDateChanged($model, $model->created_at));
+                if ($model->exists) {
+                    $model->raise(new Event\PostCreateDateChanged($model, $model->getOriginal('created_at')));
+                }
 
                 // Update discussion metadata
                 $model->afterSave(function (Post $post) {
                     $post->discussion->refreshLastPost()->save();
                 });
-            } else {
-                $model->raise(new Event\DiscussionCreateDateChanged($model, $model->created_at));
+            } elseif ($model->exists) {
+                $model->raise(new Event\DiscussionCreateDateChanged($model, $model->getOriginal('created_at')));
             }
 
-            $model->created_at = Carbon::parse($data['attributes']['createdAt']);
+            $model->created_at = Carbon::parse($data['attributes']['createdAt'])->utc();
         }
 
         if (isset($data['attributes']['editedAt']) && $model instanceof Post) {
             $actor->assertCan('fof-author-change.edit-date');
 
-            $model->raise(new Event\PostEditDateChanged($model, $model->edited_at));
+            $model->raise(new Event\PostEditDateChanged($model, $model->getOriginal('edited_at')));
 
             if (empty($data['attributes']['editedAt'])) {
                 $model->edited_at = null;
@@ -123,7 +130,7 @@ abstract class AbstractSaveAuthor
                     'time' => $data['attributes']['editedAt'],
                 ]);
 
-                $model->edited_at = Carbon::parse($data['attributes']['editedAt']);
+                $model->edited_at = Carbon::parse($data['attributes']['editedAt'])->utc();
             }
         }
     }

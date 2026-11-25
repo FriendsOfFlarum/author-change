@@ -193,4 +193,48 @@ class PermissionTest extends TestCase
 
         return $value === null ? null : (int) $value;
     }
+
+    #[Test]
+    public function creating_a_discussion_with_a_null_author_keeps_the_creator()
+    {
+        $response = $this->send(
+            $this->request('POST', '/api/discussions', [
+                'authenticatedAs' => 2,
+                'json'            => [
+                    'data' => [
+                        'type'          => 'discussions',
+                        'attributes'    => ['title' => 'A new discussion', 'content' => 'Some content for it.'],
+                        'relationships' => ['user' => ['data' => null]],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertEquals(201, $response->getStatusCode(), (string) $response->getBody());
+
+        $id = json_decode((string) $response->getBody(), true)['data']['id'];
+        $this->assertEquals(2, $this->database()->table('discussions')->where('id', $id)->value('user_id'));
+    }
+
+    #[Test]
+    public function an_admin_can_create_a_reply_with_a_creation_date()
+    {
+        $response = $this->send(
+            $this->request('POST', '/api/posts', [
+                'authenticatedAs' => 1,
+                'json'            => [
+                    'data' => [
+                        'type'          => 'posts',
+                        'attributes'    => ['content' => 'An imported reply.', 'createdAt' => '2019-05-06T07:08:00+00:00'],
+                        'relationships' => ['discussion' => ['data' => ['type' => 'discussions', 'id' => '1']]],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertEquals(201, $response->getStatusCode(), (string) $response->getBody());
+
+        $id = json_decode((string) $response->getBody(), true)['data']['id'];
+        $this->assertEquals('2019-05-06 07:08:00', $this->database()->table('posts')->where('id', $id)->value('created_at'));
+    }
 }
