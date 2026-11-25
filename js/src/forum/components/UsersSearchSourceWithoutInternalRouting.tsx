@@ -39,14 +39,11 @@ export default class UsersSearchSourceWithoutInternalRouting implements SearchSo
       .sort((a, b) => a.displayName().localeCompare(b.displayName()));
 
     const minLength = SearchManager.minSearchLength();
-    const typeMore = () =>
-      m(
-        'li',
-        Button.component(
-          { icon: 'fas fa-info-circle' },
-          app.translator.trans('fof-author-change.forum.search.type-more-characters', { count: minLength })
-        )
-      );
+    const typeMore = () => (
+      <li>
+        <Button icon="fas fa-info-circle">{app.translator.trans('fof-author-change.forum.search.type-more-characters', { count: minLength })}</Button>
+      </li>
+    );
     const tooShort = SearchManager.queryLength(lowerQuery) < minLength;
 
     if (results.length === 0) {
@@ -54,16 +51,14 @@ export default class UsersSearchSourceWithoutInternalRouting implements SearchSo
         return [typeMore()];
       }
 
-      return [m('li', Button.component({ icon: 'fas fa-search-minus' }, app.translator.trans('fof-author-change.forum.search.no-results')))];
+      return [
+        <li>
+          <Button icon="fas fa-search-minus">{app.translator.trans('fof-author-change.forum.search.no-results')}</Button>
+        </li>,
+      ];
     }
 
-    const items = results.map((user) =>
-      UserSearchResult.component({
-        user,
-        query,
-        onclick: () => this.onselect(user),
-      })
-    );
+    const items = results.map((user) => <UserSearchResult user={user} query={query} onclick={() => this.onselect(user)} />);
 
     if (tooShort) {
       items.push(typeMore());

@@ -14,17 +14,9 @@ app.initializers.add('fof-author-change', () => {
 
     items.add(
       'fof-author-change',
-      Button.component(
-        {
-          icon: 'fas fa-user-edit',
-          onclick() {
-            app.modal.show(() => import('./components/UpdateAuthorModal'), {
-              related: discussion,
-            });
-          },
-        },
-        app.translator.trans('fof-author-change.forum.controls.edit')
-      )
+      <Button icon="fas fa-user-edit" onclick={() => app.modal.show(() => import('./components/UpdateAuthorModal'), { related: discussion })}>
+        {app.translator.trans('fof-author-change.forum.controls.edit')}
+      </Button>
     );
   });
 
@@ -35,17 +27,9 @@ app.initializers.add('fof-author-change', () => {
 
     items.add(
       'fof-author-change',
-      Button.component(
-        {
-          icon: 'fas fa-user-edit',
-          onclick() {
-            app.modal.show(() => import('./components/UpdateAuthorModal'), {
-              related: post,
-            });
-          },
-        },
-        app.translator.trans('fof-author-change.forum.controls.edit')
-      )
+      <Button icon="fas fa-user-edit" onclick={() => app.modal.show(() => import('./components/UpdateAuthorModal'), { related: post })}>
+        {app.translator.trans('fof-author-change.forum.controls.edit')}
+      </Button>
     );
   });
 });
