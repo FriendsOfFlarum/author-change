@@ -17,7 +17,7 @@ class AuditedInstructions
 {
     public function __invoke(McpContext $context): ?string
     {
-        if (! $context->actor->can('fof-author-change.edit-user') && ! $context->actor->can('fof-author-change.edit-date')) {
+        if (!$context->actor->can('fof-author-change.edit-user') && !$context->actor->can('fof-author-change.edit-date')) {
             return null;
         }
 
