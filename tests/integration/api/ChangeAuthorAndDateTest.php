@@ -247,4 +247,54 @@ class ChangeAuthorAndDateTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode(), (string) $response->getBody());
     }
+
+    #[Test]
+    public function dates_with_an_offset_are_stored_in_utc()
+    {
+        foreach (['posts/2' => ['createdAt', 'editedAt'], 'discussions/1' => ['createdAt']] as $path => $fields) {
+            $response = $this->send(
+                $this->request('PATCH', "/api/$path", [
+                    'authenticatedAs' => 3,
+                    'json'            => [
+                        'data' => [
+                            'attributes' => array_fill_keys($fields, '2021-03-04T05:06:00+02:00'),
+                        ],
+                    ],
+                ])
+            );
+
+            $this->assertEquals(200, $response->getStatusCode(), (string) $response->getBody());
+
+            [$table, $id] = explode('/', $path);
+            $row = $this->database()->table($table)->where('id', $id)->first();
+
+            foreach ($fields as $field) {
+                $column = $field === 'createdAt' ? 'created_at' : 'edited_at';
+                $this->assertEquals('2021-03-04 03:06:00', Carbon::parse($row->$column)->toDateTimeString(), "$path $field");
+            }
+        }
+    }
+
+    #[Test]
+    public function changing_post_author_refreshes_both_authors_comment_counts()
+    {
+        $response = $this->send(
+            $this->request('PATCH', '/api/posts/2', [
+                'authenticatedAs' => 3,
+                'json'            => [
+                    'data' => [
+                        'relationships' => [
+                            'user' => ['data' => ['type' => 'users', 'id' => '5']],
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode(), (string) $response->getBody());
+
+        $counts = $this->database()->table('users')->whereIn('id', [2, 5])->pluck('comment_count', 'id');
+        $this->assertEquals(1, $counts[2]);
+        $this->assertEquals(1, $counts[5]);
+    }
 }

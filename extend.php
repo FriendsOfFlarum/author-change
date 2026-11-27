@@ -18,7 +18,10 @@ use Flarum\Api\Schema;
 use Flarum\Audit\Extend\Audit;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Extend;
+use Flarum\Mcp\Extend\Mcp;
 use Flarum\Post\Event\Saving as PostSaving;
+use FoF\AuthorChange\Mcp\AuditedInstructions;
+use FoF\AuthorChange\Mcp\AuthorChangeInstructions;
 
 return [
     (new Extend\Frontend('forum'))
@@ -97,5 +100,15 @@ return [
                     'old_user_id'   => optional($e->oldUser)->id,
                     'new_user_id'   => optional($e->post->user)->id,
                 ]),
+        ])
+        ->whenExtensionEnabled('flarum-mcp', fn () => [
+            (new Mcp())
+                ->ability('fof-author-change.edit-user', 'Change who wrote a post or discussion')
+                ->ability('fof-author-change.edit-date', 'Change when a post or discussion was created or edited')
+                ->instructions(new AuthorChangeInstructions()),
+        ])
+        ->whenExtensionsEnabled(['flarum-mcp', 'flarum-audit'], fn () => [
+            (new Mcp())
+                ->instructions(new AuditedInstructions()),
         ]),
 ];

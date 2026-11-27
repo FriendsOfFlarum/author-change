@@ -78,7 +78,37 @@ class AuditIntegrationTest extends TestCase
 
         $payload = json_decode($log->payload, true);
         $this->assertEquals(1, $payload['discussion_id']);
+        $this->assertEquals(2, $payload['old_user_id']);
         $this->assertEquals(5, $payload['new_user_id']);
+    }
+
+    #[Test]
+    public function removing_the_post_author_writes_an_audit_log_entry()
+    {
+        $response = $this->send(
+            $this->request('PATCH', '/api/posts/2', [
+                'authenticatedAs' => 3,
+                'json'            => [
+                    'data' => [
+                        'relationships' => [
+                            'user' => ['data' => null],
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode(), (string) $response->getBody());
+
+        $log = $this->database()->table('audit_log')
+            ->where('action', 'post.user_changed')
+            ->first();
+
+        $this->assertNotNull($log, 'Expected an audit log entry for the author removal.');
+
+        $payload = json_decode($log->payload, true);
+        $this->assertEquals(2, $payload['old_user_id']);
+        $this->assertNull($payload['new_user_id']);
     }
 
     #[Test]
@@ -140,5 +170,45 @@ class AuditIntegrationTest extends TestCase
             0,
             $this->database()->table('audit_log')->whereIn('action', $authorChangeActions)->count()
         );
+    }
+
+    protected function patch(string $path, array $attributes): void
+    {
+        $response = $this->send(
+            $this->request('PATCH', "/api/$path", [
+                'authenticatedAs' => 3,
+                'json'            => ['data' => ['attributes' => $attributes]],
+            ])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode(), (string) $response->getBody());
+    }
+
+    protected function lastPayload(string $action): array
+    {
+        $log = $this->database()->table('audit_log')->where('action', $action)->orderByDesc('id')->first();
+        $this->assertNotNull($log, "Expected an audit log entry for $action.");
+
+        return json_decode($log->payload, true);
+    }
+
+    #[Test]
+    public function date_changes_record_the_previous_date()
+    {
+        $this->patch('posts/1', ['createdAt' => '2016-03-10T08:00:00+00:00']);
+        $payload = $this->lastPayload('post.create_date_changed');
+        $this->assertStringStartsWith('2020-01-01', $payload['old_date']);
+        $this->assertStringStartsWith('2016-03-10T08:00:00', $payload['new_date']);
+
+        $this->patch('discussions/1', ['createdAt' => '2016-03-10T08:00:00+00:00']);
+        $payload = $this->lastPayload('discussion.create_date_changed');
+        $this->assertStringStartsWith('2020-01-01', $payload['old_date']);
+        $this->assertStringStartsWith('2016-03-10T08:00:00', $payload['new_date']);
+
+        $this->patch('posts/2', ['editedAt' => '2021-01-01T00:00:00+00:00']);
+        $this->patch('posts/2', ['editedAt' => '2022-01-01T00:00:00+00:00']);
+        $payload = $this->lastPayload('post.edit_date_changed');
+        $this->assertStringStartsWith('2021-01-01T00:00:00', $payload['old_date']);
+        $this->assertStringStartsWith('2022-01-01T00:00:00', $payload['new_date']);
     }
 }
